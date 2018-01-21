@@ -1,13 +1,31 @@
-var Player = function(){
-
+var Player = function(options){
+    options = options || {};
+    this.sprite = 'images/char-cat-girl.png';
+    this.x = options.x || 0;
+    this.y = options.y || 0;
+    this.speed = options.speed || 10;
+    this.step = 10;
 }
 
 Player.prototype = {
-    handleInput:function(){
-    
+    handleInput:function(k){
+        switch(k){
+            case 'left':
+                this.x -= this.step;
+                break;
+            case 'right':
+                this.x += this.step;
+                break;
+            case 'up':
+                this.y -= this.step;
+                break;
+            case 'down':
+                this.y += this.step;
+                break;
+        }
     },
     render:function(){
-    
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     },
     update:function(){
     
@@ -15,26 +33,36 @@ Player.prototype = {
 };
 
 // Enemies our player must avoid
-var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+var Enemy = function(options) {
     this.sprite = 'images/enemy-bug.png';
+    this.x = options.x || 0;
+    this.y = options.y || 0;
+    this.speed = options.speed || 10;
+    this.bug_width = 101;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+   this.x += this.speed;
+   if(this.x >= ctx.canvas.width - this.bug_width) {
+        this.speed = - this.speed;
+   }
+   if(this.x <= 0) {
+        this.speed = - this.speed;
+   }
+   if(this.speed > 0 ) {
+    this.sprite = 'images/enemy-bug.png';
+   } else {
+    this.sprite = 'images/enemy-bug-back.png';
+   }
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    //var step = 180;
+    //ctx.rotate(Math.PI / 180 * step);
+    ctx.drawImage(Resources.get(this.sprite,this.speed), this.x, this.y);
 };
 
 // Now write your own player class
@@ -47,8 +75,22 @@ Enemy.prototype.render = function() {
 // Place the player object in a variable called player
 
 
-var player = new Player();
+var player = new Player({
+    x:440,
+    y:83 * 6,
+});
 var allEnemies = [];
+
+var bugCout = 4;
+for(var bugIndex = 0 ; bugIndex < bugCout ; bugIndex++){
+    allEnemies.push(new Enemy({
+        x:0,
+        y:83 * ( bugIndex + 1 ) - 20,
+        speed:(Math.random() * 3) + 1
+    }));
+}
+
+
 
 
 // This listens for key presses and sends the keys to your

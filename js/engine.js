@@ -181,7 +181,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/enemy-bug-back.png',
+        'images/char-cat-girl.png'
     ]);
 
     /* Assign the canvas' context object to the global variable (the window
